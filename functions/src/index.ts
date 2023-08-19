@@ -23,4 +23,5 @@ exports.greetTheWorld = functions.https.onRequest(
     const greeting = `${consumerProvidedGreeting} World from ${instanceId}`;
 
     res.send(greeting);
-  });
+  }
+);
