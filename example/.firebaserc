@@ -1,0 +1,13 @@
+{
+  "projects": {
+    "default": "explicit-content-extension"
+  },
+  "targets": {},
+  "etags": {
+    "explicit-content-extension": {
+      "extensionInstances": {
+        "explicit-content-extension": "7a22c123d477139d77e034b1e29814371b0f695b49aae75bf866c7c728cbde0d"
+      }
+    }
+  }
+}

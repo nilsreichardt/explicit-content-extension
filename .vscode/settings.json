@@ -1,0 +1,7 @@
+{
+    "typescript.tsdk": "functions/node_modules/typescript/lib",
+    "eslint.options": {
+      "configFile": "functions/tsconfig.json"
+    }
+  }
+  
