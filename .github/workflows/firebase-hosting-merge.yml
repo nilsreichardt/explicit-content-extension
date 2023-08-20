@@ -15,13 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set Flutter version from FVM config file to environment variables
-        uses: kuhnroyal/flutter-fvm-config-action@e91317131a2da710b9cd9b7a24f2c0ade9eeb61d
-
       - uses: subosito/flutter-action@main
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: ${{ env.FLUTTER_CHANNEL }}
+          flutter-version: stable
 
       - name: Build
         run: flutter build web
