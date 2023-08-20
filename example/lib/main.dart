@@ -56,24 +56,21 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Explicit Content Extension Demo'),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const _Description(),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Container(
-                  width: 1,
-                  height: double.infinity,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-                ),
+      body: Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const _Description(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Container(
+                width: 1,
+                height: double.infinity,
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
               ),
-              const _Demo(),
-            ],
-          ),
+            ),
+            const _Demo(),
+          ],
         ),
       ),
     );
@@ -190,88 +187,93 @@ class _DemoState extends State<_Demo> {
       ),
       child: Padding(
         padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Demo',
-              style: Theme.of(context).textTheme.headlineMedium,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            const Text(
-              'Let\'s try it out! Upload an image or use the example and see what happens.',
-              style: TextStyle(fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 12),
-            Row(
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Tooltip(
-                  message: 'File limit: 10 MB',
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      reset();
-
-                      final file = await FilePicker.platform.pickFiles(
-                        type: FileType.image,
-                        allowMultiple: false,
-                      );
-
-                      if (!mounted || file == null) {
-                        return;
-                      }
-
-                      setState(() {
-                        isLoading = true;
-                        imageBytes = file.files.single.bytes;
-                      });
-
-                      await uploadImage();
-                    },
-                    child: const Text('Upload Image'),
-                  ),
+                Text(
+                  'Demo',
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: () async {
-                    reset();
-
-                    final exampleImageBytes = await rootBundle
-                        .load('assets/adult-content-edit.png')
-                        .then((value) => value.buffer.asUint8List());
-                    setState(() {
-                      isLoading = true;
-                      imageBytes = exampleImageBytes;
-                    });
-
-                    await uploadImage();
-                  },
-                  child: const Text('Use Example'),
+                const SizedBox(height: 12),
+                const Text(
+                  'Let\'s try it out! Upload an image or use the example and see what happens.',
+                  style: TextStyle(fontSize: 16),
+                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(width: 12),
-                if (imageBytes != null)
-                  ElevatedButton(
-                    onPressed: () => reset(),
-                    child: const Text('Reset'),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Tooltip(
+                      message: 'File limit: 10 MB',
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          reset();
+
+                          final file = await FilePicker.platform.pickFiles(
+                            type: FileType.image,
+                            allowMultiple: false,
+                          );
+
+                          if (!mounted || file == null) {
+                            return;
+                          }
+
+                          setState(() {
+                            isLoading = true;
+                            imageBytes = file.files.single.bytes;
+                          });
+
+                          await uploadImage();
+                        },
+                        child: const Text('Upload Image'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    ElevatedButton(
+                      onPressed: () async {
+                        reset();
+
+                        final exampleImageBytes = await rootBundle
+                            .load('assets/adult-content-edit.png')
+                            .then((value) => value.buffer.asUint8List());
+                        setState(() {
+                          isLoading = true;
+                          imageBytes = exampleImageBytes;
+                        });
+
+                        await uploadImage();
+                      },
+                      child: const Text('Use Example'),
+                    ),
+                    const SizedBox(width: 12),
+                    if (imageBytes != null)
+                      ElevatedButton(
+                        onPressed: () => reset(),
+                        child: const Text('Reset'),
+                      ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                if (imageBytes != null && downloadUrl == null)
+                  Image.memory(
+                    imageBytes!,
+                    height: 512,
                   ),
+                if (downloadUrl != null)
+                  Image.network(
+                    '${downloadUrl!}${firestoreDocData == null ? '' : '&reload'}',
+                    height: 512,
+                  ),
+                if (isLoading) const Center(child: CircularProgressIndicator()),
+                if (status != null) Text(status!),
+                if (firestoreDocData != null) Text(firestoreDocData!),
               ],
             ),
-            const SizedBox(height: 12),
-            if (imageBytes != null && downloadUrl == null)
-              Image.memory(
-                imageBytes!,
-                height: 512,
-              ),
-            if (downloadUrl != null)
-              Image.network(
-                '${downloadUrl!}${firestoreDocData == null ? '' : '&reload'}',
-                height: 512,
-              ),
-            if (isLoading) const Center(child: CircularProgressIndicator()),
-            if (status != null) Text(status!),
-            if (firestoreDocData != null) Text(firestoreDocData!),
-          ],
+          ),
         ),
       ),
     );
