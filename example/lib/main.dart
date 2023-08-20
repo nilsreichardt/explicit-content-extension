@@ -56,21 +56,24 @@ class MyHomePage extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Explicit Content Extension Demo'),
       ),
-      body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const _Description(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Container(
-                width: 1,
-                height: double.infinity,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              const _Description(),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                child: Container(
+                  width: 1,
+                  height: double.infinity,
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+                ),
               ),
-            ),
-            const _Demo(),
-          ],
+              const _Demo(),
+            ],
+          ),
         ),
       ),
     );
