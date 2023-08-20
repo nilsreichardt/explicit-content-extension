@@ -26,3 +26,4 @@ jobs:
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_EXPLICIT_CONTENT_EXTENSION }}'
           channelId: live
           projectId: explicit-content-extension
+          entryPoint: example

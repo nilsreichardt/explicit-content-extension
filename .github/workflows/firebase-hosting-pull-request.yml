@@ -28,3 +28,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_EXPLICIT_CONTENT_EXTENSION }}'
           projectId: explicit-content-extension
+          entryPoint: example
