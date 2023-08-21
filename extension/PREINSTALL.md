@@ -1,22 +1,32 @@
-<!-- 
-This file provides your users an overview of your extension. All content is optional, but this is the recommended format. Your users will see the contents of this file when they run the `firebase ext:info` command.
+Use this extension to automatically detect explicit content in images uploaded to Firebase Storage. The extension uses the [Google Cloud Vision API](https://cloud.google.com/vision) to detect explicit content in images uploaded to Firebase Storage. It then blurs the image and replaces the original image with the blurred version while retaining the original image's metadata.
 
-Include any important functional details as well as a brief description for any additional setup required by the user (both pre- and post-installation).
+Here's how it works:
 
-Learn more about writing a PREINSTALL.md file in the docs:
-https://firebase.google.com/docs/extensions/publishers/user-documentation#writing-preinstall
--->
+1. The extension is triggered when a new image is uploaded to Firebase Storage.
+2. Upon the image upload, a Cloud Function is triggered, which calls the Cloud Vision API to analyze the content of the image.
+3. The Cloud Vision API determines whether the image contains explicit content or not.
+4. If the image does contain explicit content, the extension takes several actions:
+  a) The image is downloaded from Firebase Storage.
+  b) The downloaded image is blurred and compressed to obscure the explicit content.
+  c) The blurred image is then uploaded back to Firebase Storage, replacing the original image while retaining all metadata.
+  d) A Firestore document is created to store details about the blurred image.
+If the image does not contain explicit content, no further action is taken by the extension.
 
-Use this extension to send a friendly greeting.
+The extension automatically copies the following metadata, if present, from the original image to the resized image(s): `Cache-Control`, `Content-Disposition`, `Content-Encoding`, `Content-Language`, `Content-Type`, and user-provided metadata (the Firebase storage download token will also be copied).
 
-When triggered by an HTTP request, this extension responds with your specified friendly greeting.
+Backfill is not supported. Only images uploaded after installing this extension will be processed.
 
-<!-- We recommend keeping the following section to explain how billing for Firebase Extensions works -->
-# Billing
+#### Additional setup
 
-This extension uses other Firebase or Google Cloud Platform services which may have associated charges:
+Before installing this extension, make sure that you've [set up a Cloud Storage bucket](https://firebase.google.com/docs/storage) in your Firebase project.
 
-<!-- List all products the extension interacts with -->
-- Cloud Functions
+> **NOTE**: As mentioned above, this extension listens for all changes made to the specified Cloud Storage bucket. This may cause unnecessary function calls. It is recommended to create a separate Cloud Storage bucket, especially for images you want to resize, and set up this extension to listen to that bucket.
 
-When you use Firebase Extensions, you're only charged for the underlying resources that you use. A paid-tier billing plan is only required if the extension uses a service that requires a paid-tier plan, for example calling to a Google Cloud Platform API or making outbound network requests to non-Google services. All Firebase services offer a free tier of usage. [Learn more about Firebase billing.](https://firebase.google.com/pricing)
+#### Billing
+
+To install an extension, your project must be on the [Blaze (pay as you go) plan](https://firebase.google.com/pricing)
+
+- This extension uses other Firebase and Google Cloud Platform services, which have associated charges if you exceed the service’s no-cost tier:
+ - Cloud Storage
+ - Cloud Functions (Node.js 10+ runtime. [See FAQs](https://firebase.google.com/support/faq#extensions-pricing))
+ - Cloud Vision API, Safe Search (explicit content) Detection (See [pricing](https://cloud.google.com/vision/pricing#prices))
